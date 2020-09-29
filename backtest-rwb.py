@@ -12,7 +12,6 @@ st.write("""
 Backtests the Red White Blue moving average pattern from 
 [**wishingwealthblog.com**](https://wishingwealthblog.com/glossary/)
 """)
-#st.write('<https://wishingwealthblog.com/glossary/>')
 st.write("""---""")
 
 #image=Image.open("vivmyc/yahoo_finance_python.jpeg")
@@ -31,26 +30,9 @@ def get_input():
 	)
 	return stock,startyear
 
-#function to get company name
-
-#stock=input("Enter a stock ticker symbol: ")
-#startyear=input("Enter start year: yyyy ")
-
 stock, startyear = get_input()
 startmonth=11
 startday=1
-
-
-# # Add a slider to the sidebar:
-# add_slider = st.sidebar.slider(
-#     'Select a range of values',
-#     0.0, 100.0, (25.0, 75.0)
-# )
-
-
-#[this is a text link](upload://7FxfXwDqJIZdYJ2QYADywvNRjB.png)
-#[![this is an image link](upload://7FxfXwDqJIZdYJ2QYADywvNRjB.png)](https://streamlit.io)
-#[I'm an inline-style link](https://www.google.com)
 
 start=dt.datetime(int(startyear)-1,startmonth,startday)
 
@@ -61,7 +43,12 @@ if not stock:
 	st.header('<----- Enter a stock symbol and year in the input side panel')
 else:
 	ticker = yf.Ticker(stock)
-	company_name = ticker.info['longName']
+	ticker
+	try: 
+		company_name = ticker.info['longName']
+	except:
+		company_name = stock.upper()
+
 	st.header(company_name)
 	st.write('**Note:** The 6 shorter term exponential averages used are 3, 5, 8, 10, 12, 15 days, and the 6 longer term exponential averages used are 30, 35, 40, 45, 50, 60 days.')
 	st.write('Back test results from January ', startyear)
@@ -79,7 +66,6 @@ else:
 	pos=0
 	num=0
 	percentchange=[]
-	st.write('\n\n\r\r\r')
 
 	for i in df.index:
 		cmin=min(df["Ema_3"][i],df["Ema_5"][i],df["Ema_8"][i],df["Ema_10"][i],df["Ema_12"][i],df["Ema_15"][i],)
@@ -93,7 +79,6 @@ else:
 				bp=round(close,2)
 				pos=1
 				st.write('\n\n\n\nBuying at ',str(bp) ,' on ', str(i))
-
 
 		elif(cmin<=cmax):
 			#Blue White Red Pattern
@@ -114,7 +99,6 @@ else:
 		num+=1
 
 	st.write('Percent Change ', percentchange)
-	df
 
 	gains=0
 	ng=0
@@ -154,16 +138,16 @@ else:
 	else:
 		battingAvg=0
 
-	# print()
-	# st.write('Number of trades: ',str(ng+nl))
+	st.write('Number of trades: ',str(ng+nl))
 	# print("EMAs used: "+str(emasUsed))
-	# print("Batting Avg: "+ str(battingAvg))
-	# print("Gain/loss ratio: "+ ratio)
-	# print("Average Gain: "+ str(avgGain))
-	# print("Average Loss: "+ str(avgLoss))
-	# print("Largest Gain: "+ maxR)
-	# print("Largest Loss: "+ maxL)
-	# print("Total return over "+str(ng+nl)+ " trades: "+ str(totalR)+"%" )
-	#print("Example return Simulating "+str(n)+ " trades: "+ str(nReturn)+"%" )
+	st.write("Batting Avg: ", str(battingAvg))
+	st.write("Gain/loss ratio: "+ ratio)
+	st.write("Average Gain: ", str(avgGain))
+	st.write("Average Loss: ", str(avgLoss))
+	st.write("Largest Gain: ", maxR)
+	st.write("Largest Loss: ", maxL)
+	st.write("Total return over "+str(ng+nl), " trades: "+ str(totalR)+"%" )
+	#st.write("Example return Simulating "+str(n), " trades: "+ str(nReturn)+"%" )
 	st.write()
+	df
 
