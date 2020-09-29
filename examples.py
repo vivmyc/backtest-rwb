@@ -72,3 +72,8 @@ def set_png_as_page_bg(png_file):
 
 set_png_as_page_bg('bg4.jpg')
 ########
+
+#these do same horizontal line:
+st.write("""---""")
+st.markdown("---")
+

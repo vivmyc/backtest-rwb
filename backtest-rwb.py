@@ -1,3 +1,6 @@
+#
+# Backtest RWB moving averages pattern for stocks
+#
 import pandas as pd
 import numpy as np
 import yfinance as yf
@@ -8,7 +11,8 @@ from PIL import Image
 
 yf.pdr_override()
 
-######## Set background image:
+# Set the background image in the main panel
+#-------
 import base64
 
 @st.cache(allow_output_mutation=True)
@@ -32,21 +36,19 @@ def set_png_as_page_bg(png_file):
     return
 
 set_png_as_page_bg('bg4.jpg')
-########
+#-------
+
+
 st.write("""
 # Backtest RWB Pattern
 Backtests the Red White Blue moving average pattern from 
 [**wishingwealthblog.com**](https://wishingwealthblog.com/glossary/)
 """)
-st.write("""---""")
+st.markdown("---")
 
-#sb_image=Image.open("rwb.jpg")
-#st.sidebar.image(sb_image, use_column_width=True)
-
-#image=Image.open("market4.jpeg")
-#st.image(image, use_column_width=True)
-
+#
 #function to get user input
+#
 def get_input():
 	stock=st.sidebar.text_input("Enter Ticker Symbol", "")
 	#startyear=st.sidebar.text_input("Start Year", "")
@@ -67,17 +69,20 @@ now=dt.datetime.now()
 
 #todo Need to do some input validation
 if not stock:
-	st.header('<----- Enter a stock symbol and year in the input side panel')
+	'''
+	### <------- Enter stock symbol and year in the side panel
+	'''
 else:
 	ticker = yf.Ticker(stock)
 	try: 
-		company_name = ticker.info['longName']
+		company_name = ticker.info['longName'] + ' (' + stock.upper() + ')'
 	except:
 		company_name = stock.upper()
 
 	st.write('#',company_name)
 	st.write('**Note:** The 6 shorter term exponential averages used are 3, 5, 8, 10, 12, 15 days, and the 6 longer term exponential averages used are 30, 35, 40, 45, 50, 60 days.')
 	st.write('## Back test results from January ', startyear)
+
 	df=pdr.get_data_yahoo(stock,start,now)
 
 # df[smaString]=df.iloc[:,4].rolling(window=ma).mean()
@@ -115,12 +120,16 @@ else:
 				#print("Selling at "+str(sp) +" on " + str(df["Date"][i]) )
 				pc=(sp/bp-1)*100
 				percentchange.append(round(pc,2))
+
 		if(num==df["Adj Close"].count()-1 and pos==1):
 			pos=0
-			sp=close
-			st.write ('Selling at ', str(sp), ' on ',  str(i))
+			sp=round(close,2)
 			pc=(sp/bp-1)*100
-			percentchange.append(pc)
+			percentchange.append(round(pc,2))
+			if (pc>0):
+				st.write('Current price is: ', round(close,2), ' up ',   round(pc,2), ' percent as of',  str(i))
+			else:
+				st.write('Current price is: ', round(close,2), ' down ', round(pc,2), ' percent as of',  str(i))
 
 		num+=1
 
