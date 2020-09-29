@@ -1,5 +1,7 @@
 streamlit
 numpy
 pandas
+pandas_datareader
 yfinance
 datetime
+
