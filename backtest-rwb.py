@@ -43,7 +43,6 @@ if not stock:
 	st.header('<----- Enter a stock symbol and year in the input side panel')
 else:
 	ticker = yf.Ticker(stock)
-	ticker
 	try: 
 		company_name = ticker.info['longName']
 	except:
