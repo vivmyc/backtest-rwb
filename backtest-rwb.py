@@ -4,9 +4,35 @@ import yfinance as yf
 import streamlit as st
 import datetime as dt
 from pandas_datareader import data as pdr
+from PIL import Image
 
 yf.pdr_override()
 
+######## Set background image:
+import base64
+
+@st.cache(allow_output_mutation=True)
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+def set_png_as_page_bg(png_file):
+    bin_str = get_base64_of_bin_file(png_file)
+    page_bg_img = '''
+    <style>
+    body {
+    background-image: url("data:image/png;base64,%s");
+    background-size: cover;
+    }
+    </style>
+    ''' % bin_str
+    
+    st.markdown(page_bg_img, unsafe_allow_html=True)
+    return
+
+set_png_as_page_bg('bg4.jpg')
+########
 st.write("""
 # Backtest RWB Pattern
 Backtests the Red White Blue moving average pattern from 
@@ -14,10 +40,11 @@ Backtests the Red White Blue moving average pattern from
 """)
 st.write("""---""")
 
-#image=Image.open("vivmyc/yahoo_finance_python.jpeg")
-#st.image(image, use_column_width=True)
+#sb_image=Image.open("rwb.jpg")
+#st.sidebar.image(sb_image, use_column_width=True)
 
-#st.sidebar.header('Enter')
+#image=Image.open("market4.jpeg")
+#st.image(image, use_column_width=True)
 
 #function to get user input
 def get_input():
@@ -48,9 +75,9 @@ else:
 	except:
 		company_name = stock.upper()
 
-	st.header(company_name)
+	st.write('#',company_name)
 	st.write('**Note:** The 6 shorter term exponential averages used are 3, 5, 8, 10, 12, 15 days, and the 6 longer term exponential averages used are 30, 35, 40, 45, 50, 60 days.')
-	st.write('Back test results from January ', startyear)
+	st.write('## Back test results from January ', startyear)
 	df=pdr.get_data_yahoo(stock,start,now)
 
 # df[smaString]=df.iloc[:,4].rolling(window=ma).mean()
