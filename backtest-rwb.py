@@ -58,8 +58,7 @@ now=dt.datetime.now()
 
 #todo Need to do some input validation
 if not stock:
-	st.header('Enter a stock symbol and year in the input side panel')
-	st.header('<---')
+	st.header('<----- Enter a stock symbol and year in the input side panel')
 else:
 	ticker = yf.Ticker(stock)
 	company_name = ticker.info['longName']
@@ -116,7 +115,7 @@ else:
 
 	st.write('Percent Change ', percentchange)
 	df
-	
+
 	gains=0
 	ng=0
 	losses=0
