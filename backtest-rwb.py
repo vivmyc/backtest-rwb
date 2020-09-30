@@ -79,11 +79,26 @@ else:
 	except:
 		company_name = stock.upper()
 
-	st.write('#',company_name)
-	st.write('**Note:** The 6 shorter term exponential averages used are 3, 5, 8, 10, 12, 15 days, and the 6 longer term exponential averages used are 30, 35, 40, 45, 50, 60 days.')
-	st.write('## Back test results from January ', startyear)
+	#st.write('#',company_name)
+	#st.write('**Note:** The 6 shorter term exponential averages used are 3, 5, 8, 10, 12, 15 days, and the 6 longer term exponential averages used are 30, 35, 40, 45, 50, 60 days.')
+	#st.write('## Back test results from January ', startyear)
+	#st.write("")
 
+	#
+	# Get historical stock data from yahoo
+	#
 	df=pdr.get_data_yahoo(stock,start,now)
+
+	if (df.empty or df["Adj Close"].count()-1 <= 1):
+		st.write('## Ticker ', stock.upper(), ' not found')
+		#st.write('### <------- Enter valid symbol')
+		st.write('')
+
+	else:
+		st.write('#',company_name)
+		st.write('**Note:** The 6 shorter term exponential averages used are 3, 5, 8, 10, 12, 15 days, and the 6 longer term exponential averages used are 30, 35, 40, 45, 50, 60 days.')
+		st.write('## Back test results from January ', startyear)
+		st.write("")
 
 # df[smaString]=df.iloc[:,4].rolling(window=ma).mean()
 
@@ -133,8 +148,11 @@ else:
 
 		num+=1
 
-	st.write('Percent Change ', percentchange)
 
+
+	#
+	# Summarize stats
+	#
 	gains=0
 	ng=0
 	losses=0
@@ -162,18 +180,24 @@ else:
 	if(nl>0):
 		avgLoss=losses/nl
 		maxL=str(min(percentchange))
-		ratio=str(-avgGain/avgLoss)
+		ratio=str(round(-avgGain/avgLoss,2))
 	else:
 		avgLoss=0
 		maxL="undefined"
 		ratio="inf"
 
 	if(ng>0 or nl>0):
-		battingAvg=ng/(ng+nl)
+		battingAvg=round(ng/(ng+nl), 2)
 	else:
 		battingAvg=0
 
+	
+	st.write("---")
+	st.write("")
 	st.write('Number of trades: ',str(ng+nl))
+	#st.write('Percent Change ', percentchange)
+	st.write('Percent G/L per trade: ', *percentchange, sep = ', ')
+
 	# print("EMAs used: "+str(emasUsed))
 	st.write("Batting Avg: ", str(battingAvg))
 	st.write("Gain/loss ratio: "+ ratio)
@@ -181,8 +205,10 @@ else:
 	st.write("Average Loss: ", str(avgLoss))
 	st.write("Largest Gain: ", maxR)
 	st.write("Largest Loss: ", maxL)
-	st.write("Total return over "+str(ng+nl), " trades: "+ str(totalR)+"%" )
+	st.write("#### Total return over "+str(ng+nl), " trades: "+ str(totalR)+"%" )
 	#st.write("Example return Simulating "+str(n), " trades: "+ str(nReturn)+"%" )
-	st.write()
+	st.write("")
+	st.write("---")
+	st.write("")
 	df
 
